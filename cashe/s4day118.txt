@@ -1,0 +1,183 @@
+s4day118 - 爬虫x7
+
+回顾：
+	scrapy初级：
+		起始URL
+		parse
+		选择器
+		pipeline
+		requests
+		cookie
+		headers
+	scrapy进阶：
+		去重
+		调度器（队列）
+		中间件
+		扩展
+		https
+		代理
+	扩展：
+		TinyScrapy模拟Scrapy流程
+
+
+今日内容：
+	memcached
+	django缓存
+	
+	
+	redis
+	scrapy-redis
+	
+内容：
+	1. memcached & redis 是什么？
+	   软件，在内存中存取数据。
+	   应用场景：页面缓存
+	2. memcached & redis有什么区别？
+		内存中存储时： 
+			k  === v
+		类型：
+			memcached： 类型单一
+				k  === "字符串"
+			redis：     五大类型
+				k  === "字符串"
+				k  === list
+				k  === hash
+				k  === set
+				k  === order set()
+		持久化：
+			memcached： 断电内存清空
+			redis:      支持持久化
+			
+		由于Redis只使用单核，而Memcached可以使用多核
+		那个好？
+		
+	3. memcached
+		  安装：服务端运行起来
+		客户端：socket，python中memcache模块用于连接
+		
+		
+		...
+		
+		
+	4. 应用Django缓存中	
+		- 配置： 
+			文件，默认超时时间
+			缓存，
+			...
+		- 应用：
+				- 中间件：全局
+				- 装饰器：某个视图函数
+				- 模板：
+						{% load cache %}
+						<!DOCTYPE html>
+						<html lang="en">
+						<head>
+							<meta charset="UTF-8">
+							<title>Title</title>
+						</head>
+						<body>
+							<h3>{{ ctime }}</h3>
+							{% cache 5 "kkkkkkkk" %}
+									<h3>{{ ctime }}</h3>
+							{% endcache %}
+
+						</body>
+						</html>
+	5. redis
+		
+		数据类型：
+			k->""
+			k->[1,2,3,2,666]
+			chouti:items:
+			chout:start_urls
+			
+			
+			
+			k->{"k1":'v1','k2':'v2'}
+			k->{11,222}          不重复
+			chouti:dupefilter:{}
+			
+			k->{11(9),222(3)}    不重复，可排序
+			chouti:requests 
+			cnblogs:requests : 
+		设想：
+			
+			conn.set('k','v')
+			
+			conn.append('k','666')
+			
+			conn.set('k',k1,v1)
+			
+			
+			conn.add('k',11) # 去重规则
+			
+			k->{http://www.xxx.com(-1),www.xxx.com(-2),,www.xxx.com(-3)}
+				
+				
+		应用：
+					
+			scrapy-redis插件用于将scrapy和redis结合实现简单分布式爬虫：
+				- 定义调度器
+				- 去重规则: 本质利用redis 集合元素不重复（被调度器使用） request_seen
+			
+			pip3 install scrapy-redis
+			
+	
+整理：
+	1. memcached
+		
+	2. Django缓存
+	
+	3. redis
+		- 连接
+			- StrictRedis()
+			- Redis(StrictRedis)
+			- 连接池
+			
+		- 基本操作
+			..
+			
+		- 事务
+		- 发布和订阅
+		
+	4. scrapy-redis
+		引擎，获取起始Request对象, 添加（pickle）到调度器
+											- 
+											- 先进先出列表，后进先出列表，有序集合
+		调度器通知下载器可以开始下载，去调度器中获取(pickle)request对象，下载器
+		
+		爬虫parse方法，yield
+							- item				交给pipeline处理
+							- request			交给调度去处理，调用DUPEFILTER_CLASS去检查是否已经访问过，
+	
+	
+		
+	
+		扩种：
+			- 中间件
+			- 基于信号的扩展
+	
+	
+要求： scrapy-redis了解
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
