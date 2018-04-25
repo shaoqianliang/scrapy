@@ -86,9 +86,13 @@ class ZhiHu:
             img = img.encode('utf-8')
             img_data = base64.b64decode(img)
             # filename = str(uuid.uuid4()) + 'tpm.gif'
-            filename = 'tpm.gif'
-            with open(filename, 'wb') as f:
-                f.write(img_data)
+#             filename = 'tpm.gif'   #直接读到内存去
+#             with open(filename, 'wb') as f:
+#                 f.write(img_data)
+            from io import StringIO,BytesIO
+            from PIL import Image
+            image = Image.open(BytesIO(img_data))
+            image.show()#还没有自动识别验证码
             # 多进程显示图片异常，暂时舍弃该功能
             # im = Image.open(filename)
             # sub = Process(target=im.show)
@@ -133,6 +137,10 @@ class ZhiHu:
             hm.update(ensure_bytes(kwargs['client_id']))
             hm.update(ensure_bytes(kwargs['source']))
             hm.update(ensure_bytes(kwargs['timestamp']))
+            # hm.update(kwargs['grant_type'].encode('utf-8')) #直接字节也可以
+            # hm.update(kwargs['client_id'].encode('utf-8'))
+            # hm.update(kwargs['source'].encode('utf-8'))
+            # hm.update(kwargs['timestamp'].encode('utf-8'))
         except KeyError as ex:
             print('缺少参数', ex)
         else:
@@ -140,5 +148,5 @@ class ZhiHu:
 
 
 if __name__ == '__main__':
-    login = ZhiHu('15258502385', '891008')
+    login = ZhiHu('你的账号', '密码')
     print(login.session.get(login.check_url, allow_redirects=False).status_code)
